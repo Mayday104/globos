@@ -45,12 +45,11 @@
           </div>
         </div>
       </div>
-      <div
-        id="balloonContainer"
-        class="row justify-content-center"
-        style="height: 400px"
-      >
-        <div class="col text-center justify-content-center align-self-end">
+      <div id="balloonContainer" class="row" style="height: 400px">
+        <div class="col-3">
+          <img src="coin_1.png" id="coin" width="150" />
+        </div>
+        <div class="col-6 text-center justify-content-center align-self-end">
           <img
             id="balloonImg"
             src="https://cdn.shopify.com/s/files/1/0269/3552/5429/products/Captura_de_pantalla_2019-03-12_a_la_s_11.24.55_65dc7577-9470-49bc-9ab3-ac7af2124330.png?v=1586462356"
@@ -59,7 +58,7 @@
 
           <h5><span id="roundPoints"></span> points</h5>
 
-          <div class="progress w-50 mx-auto">
+          <div class="progress w-100 mx-auto">
             <div
               id="resistance1"
               class="progress-bar bg-success"
@@ -113,6 +112,10 @@
       let maxClics = 0;
       let data = [];
       let exploded = false;
+
+      let coin1 = "coin_1.png";
+      let coin5 = "coin_5.png";
+      let coin10 = "coin_10.png";
 
       let firstNineRepeats = [
         { resist: "l", points: 1 },
@@ -245,11 +248,17 @@
         roundPointsSpan.innerHTML = roundPoitns;
         updateResistanceIndicator();
         generateClicks();
+        if (rounds[round - 1].points === 1) $("#coin").attr("src", coin1);
+
+        if (rounds[round - 1].points === 5) $("#coin").attr("src", coin5);
+
+        if (rounds[round - 1].points === 10) $("#coin").attr("src", coin10);
       }
 
       function newRound() {
         $("#btnPump").prop("disabled", false);
         round++;
+
         balloonImg.width = 200;
         $("#balloonImg").show();
         balloonContainer.hidden = false;
@@ -263,6 +272,11 @@
           roundPointsSpan.innerHTML = roundPoitns;
           updateResistanceIndicator();
           generateClicks();
+          if (rounds[round - 1].points === 1) $("#coin").attr("src", coin1);
+
+          if (rounds[round - 1].points === 5) $("#coin").attr("src", coin5);
+
+          if (rounds[round - 1].points === 10) $("#coin").attr("src", coin10);
         } else {
           endGameMessage();
         }
@@ -273,22 +287,47 @@
       }
 
       function collect() {
-        if (currentPumps < 1){
+        if (currentPumps < 1) {
           alert("You have to pump the balloon at least one time");
-        }else{
-          totalPoints+=roundPoitns;
-          $('#totalPoints').html(totalPoints);
+        } else {
+          totalPoints += roundPoitns;
+          $("#totalPoints").html(totalPoints);
           pushData("colleted");
           collectGameMessage();
-        }          
-
+        }
       }
 
       function collectGameMessage() {
         balloonContainer.hidden = true;
-        $("#message").html(
-          `The balloon didn't explode, you have earned ${roundPoitns} points this round`
-        );
+        let message = "";
+
+        switch (round) {
+          case 18:
+            message = `The balloon didn't explode, you have earned ${roundPoitns} points this round <br><br>
+              You have finished the first block you have earned ${totalPoints} points`;
+            break;
+
+          case 36:
+            message = `The balloon didn't explode, you have earned ${roundPoitns} points this round <br><br>
+              You have finished the second block you have earned ${totalPoints} points`;
+            break;
+
+          case 54:
+            message = `The balloon didn't explode, you have earned ${roundPoitns} points this round <br><br>
+              You have finished the third block you have earned ${totalPoints} points`;
+            break;
+
+          case 72:
+            message = `The balloon didn't explode, you have earned ${roundPoitns} points this round <br><br>
+              You have finished the fourth block you have earned ${totalPoints} points`;
+            break;
+
+          default:
+            message = `The balloon didn't explode, you have earned ${roundPoitns} points this round`;
+            break;
+        }
+
+        $("#message").html(message);
         messageContainer.hidden = false;
       }
 
@@ -313,7 +352,7 @@
 
       function endGameMessage() {
         balloonContainer.hidden = true;
-        $('#btnNext').hide();
+        $("#btnNext").hide();
         $("#message").html(
           `The game has ended, you has earned ${totalPoints} poitns`
         );
@@ -321,9 +360,37 @@
       }
 
       function explodeMessage() {
+        let message = "";
+
+        switch (round) {
+          case 18:
+            message = `The balloon didn't explode, you have earned ${roundPoitns} points this round <br><br>
+      You have finished the first block you have earned ${totalPoints} points`;
+            break;
+
+          case 36:
+            message = `The ballon explode after pums ${maxClics} times, you have earned ${roundPoitns} points this round <br><br>
+      You have finished the second block you have earned ${totalPoints} points`;
+            break;
+
+          case 54:
+            message = `The ballon explode after pums ${maxClics} times, you have earned ${roundPoitns} points this round <br><br>
+      You have finished the third block you have earned ${totalPoints} points`;
+            break;
+
+          case 72:
+            message = `The ballon explode after pums ${maxClics} times, you have earned ${roundPoitns} points this round <br><br>
+      You have finished the fourth block you have earned ${totalPoints} points`;
+            break;
+
+          default:
+            message = `The ballon explode after pums ${maxClics} times, you have earned ${roundPoitns} points this round`;
+            break;
+        }
+
         balloonContainer.hidden = true;
         $("#message").html(
-          `The ballon explode after pums ${maxClics} times, you have earned ${roundPoitns} points this round`
+          message
         );
         messageContainer.hidden = false;
       }
